@@ -4,14 +4,9 @@ require('dotenv').config();
 const express = require('express')
 const AdminBro = require('admin-bro')
 const mongoose = require('mongoose');
-const nodemailer = require('nodemailer');
-const fetch = require('node-fetch')
-
 
 const options = require('./admin.options')
 const buildAdminRouter = require('./admin.router')
-
-const { User } = require('./users/user.entity');
 
 const app = express()
 const port = process.env.PORT || 3000
