@@ -1,4 +1,25 @@
+require('dotenv').config();
+const nodemailer = require('nodemailer');
+const mongoose = require('mongoose');
+const fetch = require('node-fetch')
 
+const { User } = require('./users/user.entity');
+
+const getRecipients = async () => {
+  await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+
+  try {
+    console.log('getting recipients')
+    const results = await User.find({});
+    console.log('users...', results)
+    return results.map(u => u.email);
+  } catch (err) {
+    throw err;
+  }
+}
 
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
@@ -11,7 +32,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendIt = async () => {
-  await getRecipients();
+  const recipients = await getRecipients();
 
   const mailOptions = {
     from: 'jake@jakefishbain.com',
@@ -38,11 +59,12 @@ const sendIt = async () => {
         console.log(error);
       } else {
         console.log('Email sent: ' + info.response);
+        return info.response
       }
     });
+    transporter.close();
   })
   .catch(error => console.log('error', error));
 }
 
-module.exports = getRecipients;
-// sendIt();
+sendIt();

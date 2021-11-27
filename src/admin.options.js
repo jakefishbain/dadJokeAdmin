@@ -3,10 +3,10 @@ const AdminBroMongoose = require('admin-bro-mongoose')
 
 AdminBro.registerAdapter(AdminBroMongoose);
 
-const { User } = require('./users/user.entity');
+const AdminUser = require('./users/user.admin');
 
 const options = {
-  resources: [ User ]
+  resources: [ AdminUser ]
 };
 
 module.exports = options;
